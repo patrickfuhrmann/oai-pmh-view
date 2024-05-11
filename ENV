@@ -1,0 +1,5 @@
+WEB_PORT=8300
+OAI_HOST='localhost';
+OAI_PORT=3000 ;
+OAI_PREFIX='/scicat/oai' ;
+

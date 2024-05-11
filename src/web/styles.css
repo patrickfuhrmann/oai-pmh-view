@@ -1,0 +1,85 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+h1 {
+    color: #5a5a5a;
+}
+div.main-div {
+    max-width: 1000px ;
+    margin: auto ;
+    background-color: yellowgreen ;
+    border-width: 50px ;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;  // General padding for all cells
+    text-align: left;
+}
+
+td.button-cell {
+    padding: 4px; /* Reduced padding specifically for button cell */
+    width: 40; /* Optional: Adjust width as necessary */
+}
+td.title {
+    color: #3060d0;  
+    font-weight: bold ;
+}
+button {
+    display: block;
+    width: 100%;       // Make the button expand to fill the cell
+    margin: 0;         // Ensure no extra space is used for margin
+    //background-color: #3060d0;
+    background-color: #ddd;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #3060d0;
+    padding: 4px 10px; // Reduced padding inside the button
+//    transition: background-color 0.3s;
+}
+button.control {
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #3060d0;
+    color: white;
+    //background-color: #881122;
+}
+#detail {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+#detail key {
+    font-weight: bold;
+}
+
+/* Responsive Table Design */
+@media screen and (max-width: 600px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: right;
+    }
+}       
+
