@@ -8,6 +8,12 @@ body {
 h1 {
     color: #5a5a5a;
 }
+h3 {
+    color: white ;
+    background-color: green ;
+    text-align: center;
+}
+
 div.main-div {
     max-width: 1000px ;
     margin: auto ;
@@ -21,7 +27,15 @@ table {
     margin-top: 20px;
     box-shadow: 0 2px 15px rgba(0,0,0,0.1);
 }
+td.schema_table_title {
+    color: blue;
+    font-weight: bold;
+}
+td.schema_table_body {
+    font-size: 70%;
+    background-color: lightblue ;
 
+}
 th, td {
     border: 1px solid #ddd;
     padding: 8px;  // General padding for all cells
