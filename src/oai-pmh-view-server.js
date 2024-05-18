@@ -9,8 +9,11 @@ const OAI_HOST      = process.env.OAI_HOST   ? process.env.OAI_HOST   : 'localho
 const OAI_PORT      = process.env.OAI_PORT   ? process.env.OAI_PORT   : 3000 ; 
 const OAI_PREFIX    = process.env.OAI_PREFIX ? process.env.OAI_PREFIX : '/scicat/oai' ;
 
-const identifierURL = `http://${OAI_HOST}:${OAI_PORT}${OAI_PREFIX}`
+let identifierURL = `http://${OAI_HOST}:${OAI_PORT}${OAI_PREFIX}`
 
+if( process.argv.length > 2 ){
+    identifierURL = process.argv[2] ;
+}
 // Proxy configuration
 app.use('/api/identifiers', createProxyMiddleware({ target: identifierURL , changeOrigin: true }));
 
