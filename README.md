@@ -9,7 +9,7 @@ docker build -t oai-pmh-view .
 ### Starting the service (Docker only, no docker compose)
 
 **Note**: The service doesn't use the 'env' package. The
-configuration is solely done with 'environement' variables.
+configuration is solely done with 'environment' variables.
 
 Key | Description | Default
 ---:| ------- | ------
@@ -28,3 +28,9 @@ docker run \
   -p 8300:8300 \
  oai-pmh-view
 ```
+
+**Note**: The most recent version of  oai-pmh-view supports
+```
+-e OAI_PREFIX='/generic/oai'
+```
+which can be used with all formats.
