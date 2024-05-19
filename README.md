@@ -8,6 +8,9 @@ docker build -t oai-pmh-view .
 
 ### Starting the service (Docker only, no docker compose)
 
+**Note**: The service doesn't use the 'env' package. The
+configuration is solely done with 'environement' variables.
+
 Key | Description | Default
 ---:| ------- | ------
 OAI_HOST | Hostname of the oai-pmh server | oai-pmh-service
