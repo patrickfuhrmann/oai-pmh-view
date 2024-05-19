@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/  http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2024-05-17T20:45:13Z</responseDate>
+  <request verb="ListMetadataFormats">http://localhost/scicat/oai</request>
+  <ListMetadataFormats>
+    <metadataFormat>
+      <metadataPrefix>oai_dc</metadataPrefix>
+      <schema>http://www.openarchives.org/OAI/2.0/oai_dc.xsd</schema>
+      <metadataNamespace>http://www.openarchives.org/OAI/2.0/oai_dc/</metadataNamespace>
+    </metadataFormat>
+    <metadataFormat>
+      <metadataPrefix>panosc</metadataPrefix>
+      <schema>https://github.com/panosc-eu/fair-data-api/blob/master/panosc.xsd</schema>
+      <metadataNamespace>http://scicat.esss.se/panosc</metadataNamespace>
+    </metadataFormat>
+    <metadataFormat>
+      <metadataPrefix>oai_datacite</metadataPrefix>
+      <schema>http://schema.datacite.org/meta/kernel-3/metadata.xsd</schema>
+      <metadataNamespace>http://datacite.org/schema/kernel-3</metadataNamespace>
+    </metadataFormat>
+  </ListMetadataFormats>
+</OAI-PMH>
