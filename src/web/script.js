@@ -75,7 +75,7 @@ function getKey( item , key ){
    return x ? x.textContent : "N.A."
 }
 // ---------------------------------------
-function getAllDescendants(nodes,collector) {
+function getAllDescendants2(nodes,collector) {
 // ---------------------------------------
     for (let child of nodes) {
        children = child.children
@@ -89,12 +89,43 @@ function getAllDescendants(nodes,collector) {
     }
 }
 // ---------------------------------------
+function getAllDescendants(nodes,collector) {
+// ---------------------------------------
+    for (let resource of nodes) {
+       for( let item of resource.children ){
+           for( let xx of item.children ){
+              if( xx.children.length > 0){
+                  let position = 0
+                  for( let subItem of xx.children ){
+                      let value = xx.textContent ;
+                      let attrValues = "("
+                      for( let attr of subItem.attributes){
+                         console.log(attr.name + ': ' + attr.value)
+                         attrValues = attrValues  + attr.value+ "," ;
+                      }
+                      if( attrValues == "("){
+                         attrValues = "";
+                      }else{
+                         attrValues = attrValues.slice(0,-1) + ")";
+                      }
+                      collector[subItem.nodeName+"["+position+"]"+attrValues] = value ;
+                      position = position + 1;
+                  }         
+              }else{
+                  collector[xx.nodeName] = xx.textContent;
+              }
+            }
+       }
+    }
+}
+    
+// ---------------------------------------
 function setSchemaName( name ){
 // ---------------------------------------
 
     const schemaName = document.getElementById('schema_name');
     console.log("Setting "+schemaName+" "+name)
-    schemaName.textContent = "Using : <"+name+"> schema definition!";
+    schemaName.textContent = "Schema <"+name+">";
     schemaName.classname   = 'schema_name'
 }
 // ---------------------------------------
@@ -246,7 +277,7 @@ function createSchemaTable(dict){
         cell1_1.appendChild(button);
 
         cell1_1.rowSpan     = 2; // This cell will span two rows
-        cell1_1.className   = "schema_table_title"
+        cell1_1.className   = "button-cell"
         row1.appendChild(cell1_1);
 
         const cell1_2 = document.createElement('td');
