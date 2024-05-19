@@ -1,0 +1,111 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 20px;
+ //   background-color: #f4f4f9;
+    background-color: white;
+    color: #333;
+}
+button{
+    width: 100%;
+ //   font-weight: bold ;
+    font-size: 120%;
+    color: #2b2e63 ;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.6);
+    border-width: 0px ;
+}
+button:hover {
+    background-color: yellowgreen;
+}
+div {
+    border-color: gray; 
+    border-width: 0px ;
+    border-style: solid ;
+ //   background-color: gray;
+    margin: 5px ;
+    padding: 5px;
+//    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.6);
+}
+
+div#container-div {
+ //   background-color: orange ;
+    display:flex;
+    margin: 10px ;
+}
+div#schema-div {
+//    background-color: lightblue ;
+}
+div#schema-table-div {
+//    background-color: orangered ;
+    margin: 10px ;
+}
+
+div#data {
+ //   background-color: green ;
+    flex: 1 ;
+    margin: 10px ;
+}
+div#detail {
+    background-color: #eee ;
+    flex: 5 ;
+    margin: 10px ;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.6);
+
+}
+div#data-button-div {
+    flex: 3 ;
+    margin: 10px ;
+}
+div#button-table-div {
+    margin: 10px ;
+}
+h1 {
+    background-color:white;
+    padding: 5px;
+}
+h3 {
+    background-color:#eee;
+    padding: 5px;
+    text-align: center;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.6);
+
+}
+table {
+    border-color: blue; 
+    border-width: 0px ;
+    border-style: solid ;
+    width: 100% ;
+    border-spacing: 7px;
+}
+td {
+   border-style: solid ;
+   border-width: 0px;
+   border-color: gray;
+   padding: 5px ;
+   background-color: lightgray;
+   color: darkgoldenrod;
+   box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.6);
+}
+td.title {
+   background-color: white;
+   color: #2b2e63; 
+}
+td.button-cell {
+    background-color: white;
+    box-shadow: 0px 0px 0px;
+}
+td#title {
+    color: #2b2e63;  
+    font-weight: bold ;
+}
+/* Responsive Table Design */
+@media screen and (max-width: 600px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: right;
+    }
+}       
+
