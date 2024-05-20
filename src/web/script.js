@@ -293,6 +293,42 @@ function on_schema_click( details ){
 }
 // ---------------------------------------
 function createSchemaTable(dict){
+    // ---------------------------------------
+        const table = document.getElementById('schema_table');
+    
+        for (let key in dict) {
+            if( ! dict.hasOwnProperty(key) )continue ;
+            console.log(key, dict[key]);
+            schema_row = dict[key]
+    
+            const row1    = document.createElement('tr');
+            const cell1_1 = document.createElement('td');
+            const button  = document.createElement('button');
+            button.innerText = schema_row["metadataPrefix"] ;
+            button.addEventListener('click',on_schema_click);
+            cell1_1.appendChild(button);
+    
+            cell1_1.className   = "button-cell"
+            row1.appendChild(cell1_1);
+    
+            const cell1_2 = document.createElement('td');
+            cell1_2.className = "schema_table_body";
+            cell1_2.textContent = schema_row["schema"];
+            row1.appendChild(cell1_2);
+        
+            const cell2_2 = document.createElement('td');
+            cell2_2.className = "schema_table_body";
+    
+            cell2_2.textContent = schema_row["metadataNamespace"];
+            row1.appendChild(cell2_2);
+
+            table.appendChild(row1);
+
+            table.appendChild(row1);
+        }
+    }
+// ---------------------------------------
+function createSchemaTable_two_rows(dict){
 // ---------------------------------------
     const table = document.getElementById('schema_table');
 
