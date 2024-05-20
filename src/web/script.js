@@ -1,13 +1,18 @@
 let currentPage = 0;
-const pageSize = 5;
+const pageSize = 10;
 let items = [];
 let current_schema      = 'oai_dc' ;
 let availableSchemas    = {} 
-
+let errorMessage = document.getElementById('errorMessage');
+if( errorMessage ){
+    errorMessage.onclick = function() {
+        errorMessage.innerHTML = ""
+    }
+}
 
 // ---------------------------------------
 function loadData( schema  ) {
-    // ---------------------------------------
+// ---------------------------------------
     current_schema  = schema;
 
     setSchemaName( current_schema );
@@ -20,14 +25,28 @@ function loadData( schema  ) {
         .then(response => response.text())
         .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
         .then(data => {
+            error = Array.from(data.querySelectorAll('error'));
+            if( error && error.length > 0 ){
+                console.error( error[0].textContent )
+                throw Error(error[0].textContent)
+            }
             items = Array.from(data.querySelectorAll('header'));
             displayPage(currentPage);
         })
-        .catch(err => console.error('Error loading XML data:', err));
+        .catch(err => {
+            console.error('Error loading XML data:', err)
+            displayErrorMessage(""+err)
+        });
+}
+// ---------------------------------------
+function displayErrorMessage( message ){
+// ---------------------------------------
+
+    if( errorMessage )errorMessage.innerHTML = message ;
 }
 // ---------------------------------------
 function fetchDetails() {
-    // ---------------------------------------
+// ---------------------------------------
        
         const identifier = this.identifier;
         console.log("Identifier: "+identifier);
@@ -35,7 +54,14 @@ function fetchDetails() {
         fetch('/api/identifiers?verb=GetRecord&identifier='+identifier+'&metadataPrefix='+current_schema)
             .then(response => response.text())
             .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
-            .then(data => { drawDefinedDetailTable( identifier , data ) } )
+            .then(data => { 
+                error = Array.from(data.querySelectorAll('error'));
+                if( error && error.length > 0 ){
+                    console.error( error[0].textContent )
+                    throw Error(error[0].textContent)
+                }
+                drawDefinedDetailTable( identifier , data ) 
+            } )
             .catch(err => console.error('Error loading XML data:', err));
 }
 // ---------------------------------------
@@ -65,7 +91,14 @@ function fetchSchemas() {
     fetch('/api/identifiers?verb=ListMetadataFormats')
         .then(response => response.text())
         .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
-        .then(data => { storeAvailableSchemas( data ) } )
+        .then(data => { 
+            error = Array.from(data.querySelectorAll('error'));
+            if( error && error.length > 0 ){
+                console.error( error[0].textContent )
+                throw Error(error[0].textContent)
+            }
+            storeAvailableSchemas( data ) 
+        } )
         .catch(err => console.error('Error loading XML data:', err));
 }    
 // ---------------------------------------
