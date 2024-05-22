@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>XML Datenanzeige</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+ <div class="main-div">
+    <h1>OAI-PMH Query</h1>
+    <h3>Available Schemata</h3>
+
+    <table id="schema_table"></table>
+    <h3 id="schema_name"></h3>
+
+    <div id="data"></div>
+    <table><tr>
+      <td><button class="control" onclick="prevPage()">Previous</button></td>
+      <td><button class="control" onclick="nextPage()">Next</button></td>
+    </tr></table>
+ 
+    <div id="detail"></div>
+  </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
