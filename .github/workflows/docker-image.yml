@@ -32,8 +32,4 @@ jobs:
       run: echo "::set-output name=lower_repo_name::${{ github.repository_owner }}/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')"
 
     - name: Build and push Docker image
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        push: true
-        tags: ghcr.io/patrickfuhrmann-htwberlin/oai-pmh-view:1.2
+      run: docker buildx build  --tag ghcr.io/patrickfuhrmann-htwberlin/oai-pmh-view:4.4 --push .
