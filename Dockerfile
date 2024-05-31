@@ -1,3 +1,5 @@
+LABEL org.opencontainers.image.source https://github.com/patrickfuhrmann-HTWBerlin/oai-pmh-view
+
 FROM node:18-alpine
 
 WORKDIR /home/node/app
