@@ -36,4 +36,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: ghcr.io/patrickfuhrmann-htwberlin/oai-pmh-view:latest
+        tags: ghcr.io/patrickfuhrmann-htwberlin/oai-pmh-view:1.2
