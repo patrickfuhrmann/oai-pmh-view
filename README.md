@@ -1,7 +1,7 @@
 # OAI-PMH Viewer Example
 
-# Some changes
-## Building the service
+### Building the service
+
 
 ```
 docker build -t oai-pmh-view .
