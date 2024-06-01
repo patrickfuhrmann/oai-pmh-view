@@ -31,6 +31,6 @@ jobs:
       run: |
         REPO_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
         REPO_USER=$(echo ${{ github.repository_owner}} | tr '[:upper:]' '[:lower:]')
-        docker build -t oai-pmh-view:5.5 .
-        docker tag oai-pmh-view:5.5 ghcr.io/${{ github.repository_owner}}/$REPO_NAME:5.5
-        docker push ghcr.io/${{ github.repository_owner}}/$REPO_NAME:5.5
+        docker build -t oai-pmh-view:latest .
+        docker tag oai-pmh-view:latest ghcr.io/$REPO_USER/$REPO_NAME:latest
+        docker push ghcr.io/$REPO_USER/$REPO_NAME:latest
