@@ -29,7 +29,7 @@ jobs:
       
     - name: Build and push Docker image
       run: |
-        OWNER_NAME=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')
-        docker build -t oai-pmh-view:latest .
-        docker tag oai-pmh-view:latest ghcr.io/$OWNER_NAME/oai-pmh-view:latest
-        docker push ghcr.io/$OWNER_NAME/oai-pmh-view:latest
+        REPO_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
+        docker build -t oai-pmh-view:5.5 .
+        docker tag oai-pmh-view:5.5 ghcr.io/${{ github.repository_owner }}/$REPO_NAME:5.5
+        docker push ghcr.io/${{ github.repository_owner }}/$REPO_NAME:5.5
