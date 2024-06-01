@@ -1,6 +1,6 @@
 # OAI-PMH Viewer Example
-# Some changes
 
+# Some changes
 ## Building the service
 
 ```
