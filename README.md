@@ -2,6 +2,7 @@
 
 ## Building the service
 
+
 ```
 docker build -t oai-pmh-view .
 ```
@@ -34,3 +35,6 @@ docker run \
 -e OAI_PREFIX='/generic/oai'
 ```
 which can be used with all formats.
+
+### Check
+Check only works if the 'secret' is correctly configured.
