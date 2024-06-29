@@ -89,6 +89,21 @@ td.title {
    background-color: white;
    color: #2b2e63; 
 }
+td.header-left {
+   background-color: white;
+   padding: 0;
+   box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.6);
+}
+td.header-right {
+   background-color: white;
+   padding: 0;
+   box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.6);
+   text-align: right;
+}
+td.header-center {
+   background-color: white;
+   box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.6);
+}
 td.button-cell {
     background-color: white;
     box-shadow: 0px 0px 0px;
@@ -102,7 +117,7 @@ h4#errorMessage{
  color:red;
 }
 /* Responsive Table Design */
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 1000px) {
     table, thead, tbody, th, td, tr {
         display: block;
     }
@@ -110,6 +125,15 @@ h4#errorMessage{
     th, td {
         padding: 8px;
         text-align: right;
+    }
+    div#detail {
+        background-color: #eee ;
+        margin: 10px ;
+        box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.6);
+    
+    }
+    div#data-button-div {
+        margin: 10px ;
     }
 }       
 
