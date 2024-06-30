@@ -28,36 +28,30 @@ if( process.argv.length < 4 ){
 identifierURL = process.argv[2] ;
 prefixURL     = process.argv[3] ;
 
-// Proxy configuration
-// app.use('/api/identifiers', createProxyMiddleware({ target: identifierURL , changeOrigin: true }));
-
 
 const proxyConfig = {
   target: identifierURL , // target server URL (can be HTTPS)
   changeOrigin: true,     // needed for virtual hosted sites
-  secure: true,          // if you want to ignore self-signed SSL certificates
+  secure: true,           // if you want to ignore self-signed SSL certificates
   logger: console ,
   logLevel: 'debug',      // optional: to help with debugging
-  onProxyReq: (proxyReq, req, res) => {
-    const fullUrl = `${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`;
-    console.log(`Proxying request from ${req.originalUrl} to ${fullUrl}`);
-  },
-  onProxyRes: (proxyRes, req, res) => {
-    const targetUrl = `${proxyRes.req.protocol}//${proxyRes.req.host}${proxyRes.req.path}`;
-    console.log(`Proxied request from ${req.originalUrl} to ${targetUrl}`);
-  },
-  pathRewrite: {
-    '^/': prefixURL, // rewrite the path
-  },
+  pathRewrite: { '^/': prefixURL,  },
+
 //  agent: new https.Agent({
 //    secureProtocol: 'TLSv1_2_method', // force TLS 1.2
 //  }),
+
 };
 
 app.use('/api/identifiers', createProxyMiddleware( proxyConfig ));
 
 // Serve static files
 app.use(express.static('public'));
+
+const getEndpointHandler = (req, res) => {
+  res.json({ key: 'default' , server : identifierURL , prefix : prefixURL });
+};
+app.get('/endpoints', getEndpointHandler);
 
 app.listen(WEB_PORT, () => {
     console.log(`Server running at http://localhost:${WEB_PORT}`);
