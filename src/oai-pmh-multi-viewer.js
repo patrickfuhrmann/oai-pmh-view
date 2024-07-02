@@ -106,8 +106,16 @@ function initRoutes( resultArray ) {
    app.get('/endpoints', getEndpointHandler);
 
    app.get('/reboot', (req, res) => {
-       server.close()
-       setTimeout( andGo , 10000 )
+       console.log("Rebooting in one second")
+       setTimeout(
+          () => { 
+             console.log("Rebooting now")
+             server.close()
+             setTimeout( andGo , 10000 )
+          } , 
+          1000
+       )
+       res.json(endpoints);
    });
 
    app.put('/update-endpoints', (req, res) => {
