@@ -95,6 +95,7 @@ function initRoutes( resultArray ) {
         pathRewrite: { '^/': ex.prefix,  },
       };
       ex.proxy = proxyConfig;
+      console.log(`Registering : /api/${ex.key}`);
       app.use(`/api/${ex.key}`, createProxyMiddleware( proxyConfig ));
 
    });

@@ -2,14 +2,15 @@ let currentPage = 0;
 const pageSize = 10;
 let items = [];
 let current_schema      = 'oai_dc' ;
+let current_service  ; 
 let availableSchemas    = {} 
+let availableEndpoints  = {}
 let errorMessage = document.getElementById('errorMessage');
 if( errorMessage ){
     errorMessage.onclick = function() {
         errorMessage.innerHTML = ""
     }
 }
-
 // ---------------------------------------
 function loadData( schema  ) {
 // ---------------------------------------
@@ -21,7 +22,10 @@ function loadData( schema  ) {
     const detailContainer = document.getElementById('detail');
     detailContainer.innerHTML = '' ;
     currentPage = 0;
-    fetch('/api/identifiers?verb=ListIdentifiers&metadataPrefix='+current_schema)
+    // '/api/identifiers?verb=ListIdentifiers&metadataPrefix='+current_schema
+    const requestURL = `/api/${current_service.key}?verb=ListIdentifiers&metadataPrefix=${current_schema}` 
+    console.log("loadData: "+requestURL)
+    fetch(requestURL)
         .then(response => response.text())
         .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
         .then(data => {
@@ -39,19 +43,15 @@ function loadData( schema  ) {
         });
 }
 // ---------------------------------------
-function displayErrorMessage( message ){
-// ---------------------------------------
-
-    if( errorMessage )errorMessage.innerHTML = message ;
-}
-// ---------------------------------------
 function fetchDetails() {
 // ---------------------------------------
        
         const identifier = this.identifier;
-        console.log("Identifier: "+identifier);
-    
-        fetch('/api/identifiers?verb=GetRecord&identifier='+identifier+'&metadataPrefix='+current_schema)
+
+        // '/api/identifiers?verb=GetRecord&identifier='+identifier+'&metadataPrefix='+current_schema
+        const requestURL = `/api/${current_service.key}?verb=GetRecord&identifier=${identifier}&metadataPrefix=${current_schema}` 
+        console.log("fetchDetails: "+requestURL);
+        fetch(requestURL)
             .then(response => response.text())
             .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
             .then(data => { 
@@ -80,23 +80,49 @@ function storeAvailableSchemas(data) {
         }
     }
     console.log( availableSchemas)
+    clearDictionary()
     createSchemaTable(availableSchemas)
 }    
+// ---------------------------------------
+function fetchEndpoints() {
+// ---------------------------------------
+       
+    console.log("Fetching Endpoints");
+    
+    fetch('/endpoints')
+        .then(response => response.json())
+        .then(data => { 
+            storeEndpoints( data )
+            createServerTable( availableEndpoints ) 
+        } )
+        .catch(err => console.error('Error loading Endpoint Data: ', err));
+}    
+// ---------------------------------------
+function storeEndpoints( endpoints) {
+// ---------------------------------------
+    console.log(endpoints)
+    availableEndpoints = endpoints.reduce((acc, item) => {
+      acc[item.key] = item;
+      return acc;
+     }, {});
+    console.log(availableEndpoints)
+}
 // ---------------------------------------
 function fetchSchemas() {
 // ---------------------------------------
        
-    console.log("Fetching Schemas");
-    
-    fetch('/api/identifiers?verb=ListMetadataFormats')
-        .then(response => response.text())
-        .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
+    const requestURL = `/api/${current_service.key}?verb=ListMetadataFormats`    
+    console.log("fetchSchemass : "+requestURL);
+    fetch(requestURL, { method: 'GET', headers: { 'Accept': 'application/xml' }})
+        .then(response =>  response.text() )
+        .then(str => { console.log(str) ; return (new window.DOMParser()).parseFromString(str, "text/xml") })
         .then(data => { 
             error = Array.from(data.querySelectorAll('error'));
             if( error && error.length > 0 ){
                 console.error( error[0].textContent )
                 throw Error(error[0].textContent)
             }
+            console.log("Result : "+data);
             storeAvailableSchemas( data ) 
         } )
         .catch(err => console.error('Error loading XML data:', err));
@@ -106,6 +132,17 @@ function getKey( item , key ){
 // ---------------------------------------
    const x = item.querySelector(key);
    return x ? x.textContent : "N.A."
+}
+// ---------------------------------------
+function setSchemaHeader( serverName ){
+// ---------------------------------------
+   const schema_header = document.getElementById('av_schema');
+   schema_header.innerHTML = "Available Schema of "+serverName ;
+}
+// ---------------------------------------
+function displayErrorMessage( message ){
+// ---------------------------------------
+        if( errorMessage )errorMessage.innerHTML = message ;
 }
 // ---------------------------------------
 function getAllDescendants2(nodes,collector) {
@@ -224,6 +261,12 @@ function drawDefinedDetailTable( identifier , data ){
     detailContainer.appendChild(table);
 }
 // ---------------------------------------
+function clearDictionary() {
+// ---------------------------------------
+   const container = document.getElementById('data');
+   container.innerHTML = '';
+}
+// ---------------------------------------
 function displayPage(page) {
 // ---------------------------------------
     const container = document.getElementById('data');
@@ -292,10 +335,40 @@ function on_schema_click( details ){
    loadData( schema_name )
 }
 // ---------------------------------------
-function createSchemaTable(dict){
-    // ---------------------------------------
+function on_server_click( details ){
+// ---------------------------------------
+   const server_name = details.srcElement.innerText ;
+   setSchemaHeader( server_name )
+   current_service = availableEndpoints[server_name] ;
+   fetchSchemas()
+}
+// ---------------------------------------
+function createServerTable( servers ){
+// ---------------------------------------
+    const table = document.getElementById('server_table');
+    const row  = document.createElement('tr');
+    for( const k in servers ){
+       const cell = document.createElement('td');
+       const button  = document.createElement('button');
+       button.addEventListener('click',on_server_click);
+       button.innerText = k ;
+       cell.appendChild(button);
+       row.appendChild(cell);
+    }
+    table.appendChild(row);
+}
+
+// ---------------------------------------
+function clearSchemaTable(dict){
+// ---------------------------------------
         const table = document.getElementById('schema_table');
-    
+        table.innerHTML = ''
+}
+// ---------------------------------------
+function createSchemaTable(dict){
+// ---------------------------------------
+        const table = document.getElementById('schema_table');
+        table.innerHTML = ''
         for (let key in dict) {
             if( ! dict.hasOwnProperty(key) )continue ;
             console.log(key, dict[key]);
@@ -368,7 +441,10 @@ function createSchemaTable_two_rows(dict){
 }
 
 // Initial data load
-fetchSchemas()
 
-loadData('oai_dc');
+// fetchSchemas()
+
+fetchEndpoints()
+
+// loadData('oai_dc');
 

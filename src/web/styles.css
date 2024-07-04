@@ -81,7 +81,7 @@ td {
    border-width: 0px;
    border-color: gray;
    padding: 5px ;
-   background-color: lightgray;
+   background-color: #eee;
    color: darkgoldenrod;
    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.6);
 }
