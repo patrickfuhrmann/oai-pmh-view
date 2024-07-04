@@ -1,0 +1,32 @@
+[
+ {
+    "key": "local",
+    "server": "http://localhost:7002",
+    "prefix": "/scicat/oai"
+ } ,
+ {
+    "key": "hzdr",
+    "server": "https://rodare.hzdr.de",
+    "prefix": "/oai2d"
+ } ,
+ {
+    "key": "datacite",
+    "server": "https://oai.datacite.org",
+    "prefix": "/oai"
+ } ,
+ {
+    "key": "esrf",
+    "server": "https://icatplus.esrf.fr",
+    "prefix": "/oaipmh/request"
+ } ,
+ {
+    "key": "psi",
+    "server": "https://doi.psi.ch",
+    "prefix": "/oaipmh/oai"
+ }, 
+ {  "key": "desy",
+    "server": "https://public-data.desy.de",
+    "prefix": "/scicat/oai"
+ }
+]
+ 
