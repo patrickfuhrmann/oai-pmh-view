@@ -1,32 +1,44 @@
 [
  {
-    "key": "local",
+    "key": "trude",
     "server": "http://localhost:7002",
     "prefix": "/scicat/oai"
  } ,
  {
-    "key": "hzdr",
+    "key": "rosi",
+    "server": "http://localhost:7002",
+    "prefix": "/scicat/oai"
+ } ,
+ {
+    "key": "HZDR",
     "server": "https://rodare.hzdr.de",
-    "prefix": "/oai2d"
+    "prefix": "/oai2d",
+    "description": "Helmholtz-Zentrum Dresden-Rossendorf"
  } ,
  {
     "key": "datacite",
     "server": "https://oai.datacite.org",
-    "prefix": "/oai"
+    "prefix": "/oai",
+    "description": "Datecite.org"
  } ,
  {
-    "key": "esrf",
+    "key": "ESRF",
     "server": "https://icatplus.esrf.fr",
-    "prefix": "/oaipmh/request"
+    "prefix": "/oaipmh/request",
+    "description": "European Synchrotron Radiation Facility"
+
  } ,
  {
-    "key": "psi",
+    "key": "PSI",
     "server": "https://doi.psi.ch",
-    "prefix": "/oaipmh/oai"
+    "prefix": "/oaipmh/oai",
+    "description": "Paul Scherrer Institute"
  }, 
- {  "key": "desy",
+ {  "key": "DESY",
     "server": "https://public-data.desy.de",
-    "prefix": "/scicat/oai"
+    "prefix": "/scicat/oai",
+    "description": "Deutsches Elektronen-Synchrotron, DESY"
+
  }
 ]
  
