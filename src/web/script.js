@@ -11,6 +11,18 @@ if( errorMessage ){
         errorMessage.innerHTML = ""
     }
 }
+const header_text = document.getElementById('header-text');
+let pleaseWaitCounter = 0 ;
+function pleaseWait( mode ){ 
+
+    if( mode ){
+        header_text.innerHTML = "OAI-PMH Viewer (please wait)" ;
+        header_text.style.color = "red";
+    }else{
+        header_text.innerHTML = "OAI-PMH Viewer" ;
+        header_text.style.color = "green";
+    }
+}
 // ---------------------------------------
 function fetchIdentifiers( schema  ) {
 // ---------------------------------------
@@ -22,8 +34,9 @@ function fetchIdentifiers( schema  ) {
     currentPage = 0;
     const requestURL = `/api/${current_service.key}?verb=ListIdentifiers&metadataPrefix=${current_schema}` 
     console.log("fetchIdentifiers: "+requestURL)
+    pleaseWait( true )
     fetch(requestURL)
-        .then(response => response.text())
+        .then(response => { pleaseWait(false) ; return response.text() } )
         .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
         .then(data => {
             error = Array.from(data.querySelectorAll('error'));
@@ -37,79 +50,90 @@ function fetchIdentifiers( schema  ) {
         .catch(err => {
             console.error('Error loading XML data:', err)
             displayErrorMessage(""+err)
-        });
+        }).finally(() => { });
 }
 // ---------------------------------------
 function fetchDetails() {
 // ---------------------------------------
        
-        const identifier = this.identifier;
+    const identifier = this.identifier;
 
-        // '/api/identifiers?verb=GetRecord&identifier='+identifier+'&metadataPrefix='+current_schema
-        const requestURL = `/api/${current_service.key}?verb=GetRecord&identifier=${identifier}&metadataPrefix=${current_schema}` 
-        console.log("fetchDetails: "+requestURL);
-        fetch(requestURL)
-            .then(response => response.text())
-            .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
-            .then(data => { 
-                error = Array.from(data.querySelectorAll('error'));
-                if( error && error.length > 0 ){
-                    console.error( error[0].textContent )
-                    throw Error(error[0].textContent)
-                }
-                createDetailTable( identifier , data ) 
-            } )
-            .catch(err => console.error('Error loading XML data:', err));
+    const requestURL = `/api/${current_service.key}?verb=GetRecord&identifier=${identifier}&metadataPrefix=${current_schema}` 
+    console.log("fetchDetails: "+requestURL);
+    pleaseWait( true )
+    fetch(requestURL)
+        .then(response => { pleaseWait(false) ; return response.text() } )
+        .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
+        .then(data => { 
+            error = Array.from(data.querySelectorAll('error'));
+            if( error && error.length > 0 ){
+                console.error( error[0].textContent )
+                throw Error(error[0].textContent)
+            }
+             createDetailTable( identifier , data ) 
+        } )
+        .catch(err => console.error('Error loading XML data:', err))
+        .finally(() => {  }  );
 }
 // ---------------------------------------
 function fetchSchemas() {
 // ---------------------------------------
            
-        const requestURL = `/api/${current_service.key}?verb=ListMetadataFormats`    
-        console.log("fetchSchemass : "+requestURL);
-        fetch(requestURL, { method: 'GET', headers: { 'Accept': 'application/xml' }})
-            .then(response =>  response.text() )
-            .then(str => { console.log(str) ; return (new window.DOMParser()).parseFromString(str, "text/xml") })
-            .then(data => { 
-                error = Array.from(data.querySelectorAll('error'));
-                if( error && error.length > 0 ){
-                    console.error( error[0].textContent )
-                    throw Error(error[0].textContent)
-                }
-                console.log("Result : "+data);
-                storeAvailableSchemas( data ) 
-            } )
-            .catch(err => console.error('Error loading XML data:', err));
+    const requestURL = `/api/${current_service.key}?verb=ListMetadataFormats`    
+    console.log("fetchSchemass : "+requestURL);
+    pleaseWait( true )
+    fetch(requestURL, { method: 'GET', headers: { 'Accept': 'application/xml' }})
+        .then(response =>  { pleaseWait(false) ; return response.text() }  )
+        .then(str => { console.log(str) ; return (new window.DOMParser()).parseFromString(str, "text/xml") })
+        .then(data => { 
+            error = Array.from(data.querySelectorAll('error'));
+            if( error && error.length > 0 ){
+                console.error( error[0].textContent )
+                throw Error(error[0].textContent)
+            }
+            storeAvailableSchemas( data )
+            if( availableSchemas['oai_dc'] )fetchIdentifiers( 'oai_dc' )
+        } )
+        .catch(err => console.error('Error loading XML data:', err))
+        .finally(() => {  }  );
 }
 // ---------------------------------------
 function fetchEndpoints() {
 // ---------------------------------------
        
-    console.log("Fetching Endpoints");
-    
+    console.log("Fetching Endpoints");  
+    pleaseWait( true )
     fetch('/endpoints')
-        .then(response => response.json())
+        .then(response => { pleaseWait(false) ; return response.json() } )
         .then(data => { 
             storeEndpoints( data )
             createServerTable( availableEndpoints ) 
         } )
-        .catch(err => console.error('Error loading Endpoint Data: ', err));
+        .catch(err => console.error('Error loading Endpoint Data: ', err))
+        .finally(() => { }  );
 }    
+// ---------------------------------------
+function convertSchemaXML(data) {
+// ---------------------------------------
+    var result = {}
+    var list = data.querySelectorAll('ListMetadataFormats')
+    for (let formats of list) {
+        for( let format_key_list of formats.children ){
+            const format_keys = {}
+            for( let x of format_key_list.children ){
+                format_keys[x.nodeName] = x.textContent ;
+            }
+            let key = format_keys['metadataPrefix'] ;
+            if( key )result[key] = format_keys ;
+        }
+    }
+    return result ;
+}
 // ---------------------------------------
 function storeAvailableSchemas(data) {
 // ---------------------------------------
-    availableSchemas = {}
-    list = data.querySelectorAll('ListMetadataFormats')
-    for (let formats of list) {
-        for( let format_key_list of formats.children ){
-           const format_keys = {}
-           for( let x of format_key_list.children ){
-              format_keys[x.nodeName] = x.textContent ;
-           }
-           let key = format_keys['metadataPrefix'] ;
-           if( key )availableSchemas[key] = format_keys ;
-        }
-    }
+    availableSchemas = convertSchemaXML( data );
+
     console.log( availableSchemas)
 
     clearDirectoryTable()
