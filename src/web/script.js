@@ -150,6 +150,7 @@ function storeEndpoints( endpoints) {
       acc[item.key] = item;
       return acc;
      }, {});
+    console.log("availableEndpoints")
     console.log(availableEndpoints)
 }  
 // ---------------------------------------
@@ -161,7 +162,7 @@ function getKey( item , key ){
 // ---------------------------------------
 function setSchemaHeader( serverName ){
 // ---------------------------------------
-   const schema_header = document.getElementById('av_schema');
+   const schema_header = document.getElementById('schema-header');
    schema_header.innerHTML = "Available Schema of "+serverName ;
 }
 // ---------------------------------------
@@ -204,10 +205,10 @@ function getAllDescendants(nodes,collector) {
 function setDataBlockHeader( name ){
 // ---------------------------------------
 
-    const schemaName = document.getElementById('schema_name');
+    const schemaName = document.getElementById('data-header');
     console.log("Setting "+schemaName+" "+name)
     schemaName.textContent = "Schema <"+name+">";
-    schemaName.classname   = 'schema_name'
+    schemaName.className   = 'data-header'
 }
 // ---------------------------------------
 function createDetailTable( identifier , data ){
@@ -256,14 +257,13 @@ function clearDetailTable() {
 // ---------------------------------------
 function clearDirectoryTable() {
 // ---------------------------------------
-       const container = document.getElementById('data');
+       const container = document.getElementById('directory-container');
        container.innerHTML = '';
-}
-    
+}   
 // ---------------------------------------
 function displayPage(page) {
 // ---------------------------------------
-    const container = document.getElementById('data');
+    const container = document.getElementById('directory-container');
     container.innerHTML = '';
     const table = document.createElement('table');
 
@@ -287,7 +287,7 @@ function displayPage(page) {
         datestamp  = item.querySelector('datestamp').textContent;
 
         const detailButton = document.createElement('button');
-        detailButton.textContent = 'Details';
+        detailButton.textContent = 'Details' ;
         detailButton.identifier  = identifier ;
         detailButton.onclick     = fetchDetails;
 
@@ -300,6 +300,46 @@ function displayPage(page) {
 
     container.appendChild(table);
 }
+// ---------------------------------------
+function displayPage2(page) {
+// ---------------------------------------
+        const container = document.getElementById('directory-container');
+        container.innerHTML = '';
+        const table = document.createElement('table');
+    
+        // Header setup if needed
+        const header    = table.createTHead();
+        const headerRow = header.insertRow();
+        ["Action", "Identifier", "Time Recorded"].forEach(text => {
+            let th = document.createElement('th');
+            th.textContent = text;
+            headerRow.appendChild(th);
+        });
+    
+        // Ensuring button is in the first cell
+        const pageItems = items.slice(page * pageSize, (page + 1) * pageSize);
+        pageItems.forEach((item, index) => {
+            const row = table.insertRow();
+            const buttonCell = row.insertCell();
+            buttonCell.className = 'button-cell';
+            
+            identifier = item.querySelector('identifier').textContent;
+            datestamp  = item.querySelector('datestamp').textContent;
+    
+            const detailButton = document.createElement('button');
+            detailButton.textContent = 'Details' ;
+            detailButton.identifier  = identifier ;
+            detailButton.onclick     = fetchDetails;
+    
+            buttonCell.appendChild(detailButton);
+    
+            // Adding other data cells
+            row.insertCell().textContent = identifier ;
+            row.insertCell().textContent = datestamp;
+        });
+    
+        container.appendChild(table);
+    }
 // ---------------------------------------
 function nextPage() {
 // ---------------------------------------
@@ -319,8 +359,8 @@ function prevPage() {
 // ---------------------------------------
 function on_schema_click( details ){
 // ---------------------------------------
-   const schema_name = details.srcElement.innerText ;
-   fetchIdentifiers( schema_name )
+   const data_header = details.srcElement.innerText ;
+   fetchIdentifiers( data_header )
 }
 // ---------------------------------------
 function on_server_click( details ){
@@ -333,8 +373,42 @@ function on_server_click( details ){
    clearDirectoryTable()
    fetchSchemas()
 }
+// server-table-div
 // ---------------------------------------
 function createServerTable( servers ){
+    // ---------------------------------------
+        const div_container = document.getElementById('server-container');
+        for( const k in servers ){
+            
+            const button  = document.createElement('button');
+            button.className = "server-button"
+            button.addEventListener('click',on_server_click);
+            button.innerText = k ;
+
+            const table  = document.createElement('table');
+            table.className = "button-table"
+
+            var tr = document.createElement('tr');
+            var td = document.createElement('td');
+
+            td.className = "description" ;
+            td.innerHTML = servers[k].description;
+            tr.appendChild(td)
+            table.appendChild(tr)
+
+            tr = document.createElement('tr');
+            td = document.createElement('td');
+
+            td.appendChild(button);
+            td.className = "description" ;
+            tr.appendChild(td)
+
+            table.appendChild(tr)
+            div_container.appendChild(table);
+        }
+}
+// ---------------------------------------
+function createServerTable2( servers ){
 // ---------------------------------------
     const table = document.getElementById('server_table');
     const row  = document.createElement('tr');
@@ -351,13 +425,13 @@ function createServerTable( servers ){
 // ---------------------------------------
 function clearSchemaTable(){
 // ---------------------------------------
-    const table = document.getElementById('schema_table');
+    const table = document.getElementById('schema-table');
     table.innerHTML = ''
 }
 // ---------------------------------------
 function createSchemaTable(dict){
 // ---------------------------------------
-        const table = document.getElementById('schema_table');
+        const table = document.getElementById('schema-table');
         table.innerHTML = ''
         for (let key in dict) {
             if( ! dict.hasOwnProperty(key) )continue ;
@@ -367,6 +441,7 @@ function createSchemaTable(dict){
             const row1    = document.createElement('tr');
             const cell1_1 = document.createElement('td');
             const button  = document.createElement('button');
+            button.className = "button-cell";
             button.innerText = schema_row["metadataPrefix"] ;
             button.addEventListener('click',on_schema_click);
             cell1_1.appendChild(button);
@@ -405,7 +480,7 @@ fetchEndpoints()
 // ---------------------------------------
 function createSchemaTable_two_rows(dict){
 // ---------------------------------------
-    const table = document.getElementById('schema_table');
+    const table = document.getElementById('schema-table');
     table.innerHTML = ''
     
     for (let key in dict) {

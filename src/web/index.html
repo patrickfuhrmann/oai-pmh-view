@@ -6,49 +6,49 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
- <div id="main-div">
+  <div id="main-div">
 
-    <table border=0><tr>
-    <td class="header-left"><img height=70px src=leaps-logo.jpg> </td>
-    <td class="header-center"><h1 id="header-text">OAI-PMH Query</h1></td>
-    <td class="header-right"><img height=90px src=htw-logo.jpg> </td>
+    <table id="header-table"><tr>
+    <td id="header-left"><img height=70px src=leaps-logo.jpg> </td>
+    <td id="header-center"><h1 id="header-text">OAI-PMH Query</h1></td>
+    <td id="header-right"><img height=90px src=htw-logo.jpg> </td>
     </tr></table>
     
-    <div id="server-dif"></div>
-         <h3>Available Servers</h3>
-         <div id="server-table-div">
-          <table id="server_table"></table>
-        </div>
+    <div id="server-frame"></div>
+      <h3>Available Servers</h3>
+      <div id="server-container">
+      </div>
     </div>
-    <div id="schema-div">
-         <h3 id="av_schema">Available Schemata</h3>
-         <div id="schema-table-div">
-          <table id="schema_table"></table>
-        </div>
+    <div id="schema-frame">
+      <h3 id="schema-header">Available Schemata</h3>
+      <div id="schema-container">
+        <table id="schema-table"></table>
+      </div>
     </div>
-    <h3 id="schema_name"></h3>
 
-    <div id="data-div">
-      <div id="container-div">
-        <div id="data-button-div">
-          <div id="data">  </div>  
-          <div id="button-table-div">
-            <table id="button-table">
-              <tr>
+    <div id="data-frame">
+      <h3 id="data-header"></h3>
+
+        <div id="data-container">
+          <div id="list-container">
+            <div id="directory-container">  
+            </div>  
+            <div id="button-table-div">
+              <table id="button-table">
+                <tr>
                   <td><button class="control" onclick="prevPage()">Previous</button></td>
                   <td><button class="control" onclick="nextPage()">Next</button></td>
-              </tr>
-            </table>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div id="detail"></div>
           </div>
         </div>
-        <div id="detail"></div>
-        </div>
-      </div>
     </div>
     <h4 id="errorMessage"></h4>
   </div>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
 
