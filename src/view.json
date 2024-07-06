@@ -1,13 +1,9 @@
 [
  {
-    "key": "trude",
+    "key": "HTW",
     "server": "http://localhost:7002",
-    "prefix": "/scicat/oai"
- } ,
- {
-    "key": "rosi",
-    "server": "http://localhost:7002",
-    "prefix": "/scicat/oai"
+    "prefix": "/scicat/oai",
+    "description": "HTW Example Scicat"
  } ,
  {
     "key": "HZDR",
@@ -39,6 +35,26 @@
     "prefix": "/scicat/oai",
     "description": "Deutsches Elektronen-Synchrotron, DESY"
 
- }
+ },
+ {  "key": "DTU",
+    "server": "https://sciencerepository.dk",
+    "prefix": "/oai2d",
+    "description": "Danish Technical University"
+  },
+  {  "key": "UOA",
+    "server": "https://api.figshare.com",
+    "prefix": "/v2/oai",
+    "description": "University of Adelaide"
+  },
+  {  "key": "B2FIND",
+    "server": "https://b2find.eudat.eu",
+    "prefix": "/oai",
+    "description": "B2Find harvester"
+  },
+  {  "key": "SURF",
+    "server": "https://repository.surfsara.nl",
+    "prefix": "/api/oai2",
+    "description": "SURF Sara, NL "
+  }
 ]
  
