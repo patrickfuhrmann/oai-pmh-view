@@ -1,16 +1,48 @@
 const https   = require('https');
+const http    = require('http');
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const path   = require('path');
 const morgan = require('morgan');
 const fs     = require('fs');
 
+// Paths to your SSL certificate files
+// 
+const defaultCertPath = '/etc/letsencrypt/live/zam12168.zam.kfa-juelich.de/fullchain.pem';
+const defaultKeyPath  = '/etc/letsencrypt/live/zam12168.zam.kfa-juelich.de/privkey.pem';
+//
+const WEB_PORT   = process.env.WEB_PORT   ? process.env.WEB_PORT   : 80
+const HTTPS_PORT = process.env.HTTPS_PORT ? process.env.HTTPS_PORT : 443;
+const SITES_CONF = process.env.SITES_CONF ? process.env.SITES_CONF : 'view.json'
+const CERT_PATH  = process.env.CERT_PATH  ? process.env.CERT_PATH  : defaultCertPath ;
+const KEY_PATH   = process.env.KEY_PATH   ? process.env.KEY_PATH   : defaultKeyPath ;
+const doRedirect = process.env.SECURE     ? ( process.env.SECURE == 'true'  ) : false ;
+const HTTPS_REDIRECT = process.env.HTTPS_REDIRECT ?  process.env.HTTPS_REDIRECT : 'none' ;
 
-const WEB_PORT      = process.env.WEB_PORT   ? process.env.WEB_PORT   : 8300
-const WEB_CONF      = process.env.WEB_CONF   ? process.env.WEB_CONF   : 'view.json'
+const certPath = CERT_PATH ;
+const keyPath  = KEY_PATH
 
-var configs ;
+var configs = [] ;
+try{
+   configs = getConfigFromFile( SITES_CONF )
+}catch( error ){
+   configs = [] 
+}
 
+var endpoints = JSON.parse(JSON.stringify(configs));
+
+
+const options =
+    doRedirect ? 
+	{
+          cert: fs.readFileSync(certPath),
+          key: fs.readFileSync(keyPath)
+        } : {} ;
+
+const app = express();
+const httpsServer = https.createServer(options, app);
+
+var httpServer ;
 //
 //  ---------   read the command file -------------
 //
@@ -37,12 +69,13 @@ function getConfigFromArgs() {
 
    args.forEach(args => {
 
-     const [key, server, prefix] = args.split('#');
+     const [key, server, prefix , description] = args.split('#');
   
      const dictionary = {
        key: key,
        server: server,
-       prefix: prefix
+       prefix: prefix,
+       description: description 	
      };
 
      resultArray.push(dictionary);
@@ -56,20 +89,6 @@ const getEndpointHandler = (req, res) => {
   res.json(endpoints);
 };
 
-configs = getConfigFromArgs()
-
-try{
-   if( configs.length == 0 )configs = getConfigFromFile( WEB_CONF )
-}catch( error ){
-   configs = [] 
-}
-
-var endpoints = JSON.parse(JSON.stringify(configs));
-//
-//
-const app = express();
-
-var configs ;
 
 // ------------------------------------------------
 function initRoutes( resultArray ) {
@@ -111,7 +130,8 @@ function initRoutes( resultArray ) {
        setTimeout(
           () => { 
              console.log("Rebooting now")
-             server.close()
+             httpsServer.close()
+             if(httpServer)httpServer.close()
              setTimeout( andGo , 10000 )
           } , 
           1000
@@ -133,14 +153,38 @@ function initRoutes( resultArray ) {
 function andGo(){
 // ------------------------------------------------
    console.log("STARTING");
+   //
    initRoutes( configs );
-
-   server = app.listen(WEB_PORT, () => {
-      console.log(`Server running at http://localhost:${WEB_PORT}`);
-      configs.forEach( ex => {
+   //
+   // Start the HTTPS server
+   //  
+   httpsServer.listen(HTTPS_PORT, () => {
+       console.log(`HTTPS Server running on port ${HTTPS_PORT}`);
+       configs.forEach( ex => {
          console.log(`Server connecting to ${ex.key} ${ex.server} ${ex.prefix}`);
       })
    });
+
+   if( doRedirect ){
+      const httpApp = express();
+
+      httpApp.use((req, res, next) => {
+         if (req.secure) {
+             next(); // Request is already secure, proceed normally
+         } else {
+             res.redirect(
+		     HTTPS_REDIRECT == 'none' ? 
+		     `https://${req.headers.host}${req.url}` : 
+		      HTTPS_REDIRECT);
+         }
+      });
+
+      httpServer = http.createServer(httpApp);
+
+      httpServer.listen(WEB_PORT, () => {
+         console.log(`Server running at http://localhost:${WEB_PORT}`);
+      });
+   }
 
 }
 
