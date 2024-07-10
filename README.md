@@ -7,6 +7,33 @@
 docker build -t oai-pmh-view .
 ```
 
+### Starting the multi service (Docker only, no docker compose)
+
+Key | Description | Default
+---:| ------- | ------
+WEB_PORT   | HTTP Port Number| 80
+HTTPS_PORT | HTTPS Port Number | 443
+SITES_CONF | OAI-PMH Sites Configuration| 'view.json'
+CERT_PATH  |Cert Full Chain| defaultCertPath 
+KEY_PATH   |Cert Private Key | defaultKeyPath 
+SECURE     | Should use https | false 
+HTTPS_REDIRECT | To which https to redirect | 'none'
+
+```
+docker run \
+  -e SITES_CONF='/home/node/app/config/view.json' \
+  -e WEB_PORT=80 \
+  -e SECURE=true
+  -e HTTPS_PORT=443 \
+  -e CERT_PATH='/etc/letsencrypt/live/zam12168.zam.kfa-juelich.de/fullchain.pem' \
+  -e KEY_PATH='/etc/letsencrypt/live/zam12168.zam.kfa-juelich.de/fullchain.pem' \
+  -p 80:80 \
+  -p 443:443 \
+  -v  /..:/home/node/app/config \
+  -v  /etc/letsencrypt:/etc/letsencrypt \
+ oai-pmh-view
+```
+
 ### Starting the service (Docker only, no docker compose)
 
 **Note**: The service doesn't use the 'env' package. The
@@ -18,6 +45,9 @@ OAI_HOST | Hostname of the oai-pmh server | oai-pmh-service
 OAI_PORT | Port number of the oai-pmh server | 3001
 OAI_PREFIX | oai-pmh prefix for scicat | /scicat/oai 
 WEB_PORT | Port of this web service | 8300
+HTTPS_REDIRECT | Redirect to https server | none 
+
+
 
 ```
 docker run \
