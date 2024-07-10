@@ -1,7 +1,6 @@
-# OAI-PMH Viewer Example
+# OAI-PMH Multi Viewer Example
 
 ### Building the service
-
 
 ```
 docker build -t oai-pmh-view .
@@ -33,6 +32,8 @@ docker run \
   -v  /etc/letsencrypt:/etc/letsencrypt \
  oai-pmh-view
 ```
+
+# OAI-PMH Viewer Example
 
 ### Starting the service (Docker only, no docker compose)
 
