@@ -22,27 +22,13 @@ const HTTPS_REDIRECT = process.env.HTTPS_REDIRECT ?  process.env.HTTPS_REDIRECT 
 const certPath = CERT_PATH ;
 const keyPath  = KEY_PATH
 
-var configs = [] ;
-try{
-   configs = getConfigFromFile( SITES_CONF )
-}catch( error ){
-   configs = [] 
-}
-
-var endpoints = JSON.parse(JSON.stringify(configs));
-
-
-const options =
-    doRedirect ? 
-	{
-          cert: fs.readFileSync(certPath),
-          key: fs.readFileSync(keyPath)
-        } : {} ;
+var configs   = [] ;
+var endpoints = [] ;
 
 const app = express();
-const httpsServer = https.createServer(options, app);
+var httpsServer ;
 
-var httpServer ;
+if( doRedirect )runSimpleHttpRedirect() ;
 //
 //  ---------   read the command file -------------
 //
@@ -83,13 +69,35 @@ function getConfigFromArgs() {
    });
    return resultArray ;
 }
+//
+//-----------------------------------------------
+function runSimpleHttpRedirect() {
+//-----------------------------------------------
+   const httpApp = express();
+
+   httpApp.use((req, res, next) => {
+      if (req.secure) {
+          next(); // Request is already secure, proceed normally
+      } else {
+          res.redirect(
+            HTTPS_REDIRECT == 'none' ?
+            `https://${req.headers.host}${req.url}` :
+            HTTPS_REDIRECT
+         );
+      }
+   });
+
+   const httpServer = http.createServer(httpApp);
+
+   httpServer.listen(WEB_PORT, () => {
+      console.log(`Server running at http://localhost:${WEB_PORT}`);
+   });
+}
 //-----------------------------------------------
 const getEndpointHandler = (req, res) => {
 //-----------------------------------------------
   res.json(endpoints);
 };
-
-
 // ------------------------------------------------
 function initRoutes( resultArray ) {
 // ------------------------------------------------
@@ -106,7 +114,7 @@ function initRoutes( resultArray ) {
    resultArray.forEach( ex => {     
 
       const proxyConfig = {
-        target: ex.server , // target server URL (can be HTTPS)
+        target: ex.server ,     // target server URL (can be HTTPS)
         changeOrigin: true,     // needed for virtual hosted sites
         secure: true,           // if you want to ignore self-signed SSL certificates
         logger: console ,
@@ -131,7 +139,6 @@ function initRoutes( resultArray ) {
           () => { 
              console.log("Rebooting now")
              httpsServer.close()
-             if(httpServer)httpServer.close()
              setTimeout( andGo , 10000 )
           } , 
           1000
@@ -152,8 +159,24 @@ function initRoutes( resultArray ) {
 // ------------------------------------------------
 function andGo(){
 // ------------------------------------------------
-   console.log("STARTING");
+   console.log("Starting: andGo!");
    //
+   try{
+      configs = getConfigFromFile( SITES_CONF )
+   }catch( error ){
+      configs = []
+   }
+   endpoints = JSON.parse(JSON.stringify(configs));
+
+   const options =
+       doRedirect ?
+      {
+             cert: fs.readFileSync(certPath),
+             key:  fs.readFileSync(keyPath)
+           } : {} ;
+
+   httpsServer = https.createServer(options, app);
+
    initRoutes( configs );
    //
    // Start the HTTPS server
@@ -164,28 +187,6 @@ function andGo(){
          console.log(`Server connecting to ${ex.key} ${ex.server} ${ex.prefix}`);
       })
    });
-
-   if( doRedirect ){
-      const httpApp = express();
-
-      httpApp.use((req, res, next) => {
-         if (req.secure) {
-             next(); // Request is already secure, proceed normally
-         } else {
-             res.redirect(
-		     HTTPS_REDIRECT == 'none' ? 
-		     `https://${req.headers.host}${req.url}` : 
-		      HTTPS_REDIRECT);
-         }
-      });
-
-      httpServer = http.createServer(httpApp);
-
-      httpServer.listen(WEB_PORT, () => {
-         console.log(`Server running at http://localhost:${WEB_PORT}`);
-      });
-   }
-
 }
 
 // ------------------------------------------------
