@@ -21,6 +21,7 @@ HTTPS_REDIRECT | To which https to redirect | 'none'
 Configuration file format:
 ```
 [
+ {
     "key": "HTW",
     "server": "http://localhost:7002",
     "prefix": "/scicat/oai",
