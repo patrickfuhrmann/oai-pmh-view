@@ -2,7 +2,7 @@ FROM node:18-alpine
 LABEL org.opencontainers.image.source https://github.com/patrickfuhrmann-HTWBerlin/oai-pmh-view
 
 WORKDIR /home/node/app
-##
+
 COPY package*.json /home/node/app/
 COPY . /home/node/app/
 
