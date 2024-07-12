@@ -18,6 +18,24 @@ KEY_PATH   |Cert Private Key | defaultKeyPath
 SECURE     | Should use https | false 
 HTTPS_REDIRECT | To which https to redirect | 'none'
 
+Configuration file format:
+```
+[
+ {
+    "key": "HTW",
+    "server": "http://localhost:7002",
+    "prefix": "/scicat/oai",
+    "description": "HTW Example Scicat"
+ } ,
+ {
+    "key": "HZDR",
+    "server": "https://rodare.hzdr.de",
+    "prefix": "/oai2d",
+    "description": "Helmholtz-Zentrum Dresden-Rossendorf"
+ }, ....
+]
+```
+
 ```
 docker run \
   -e SITES_CONF='/home/node/app/config/view.json' \
